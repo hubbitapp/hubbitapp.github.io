@@ -1,6 +1,6 @@
 {
-  "name": "ΚΑΘ Member Hub",
-  "short_name": "ΚΑΘ Hub",
+  "name": "Hubbit",
+  "short_name": "Hubbit",
   "start_url": "./?app=1",
   "display": "standalone",
   "background_color": "#fdf2f3",
