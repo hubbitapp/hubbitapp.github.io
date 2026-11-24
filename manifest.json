@@ -1,6 +1,6 @@
 {
-  "name": "Hubbit",
-  "short_name": "Hubbit",
+  "name": "HubbIt",
+  "short_name": "HubbIt",
   "start_url": "./?app=1",
   "display": "standalone",
   "background_color": "#fdf5f2",
