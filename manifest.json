@@ -1,0 +1,20 @@
+{
+  "name": "ΚΑΘ Member Hub",
+  "short_name": "ΚΑΘ Hub",
+  "start_url": "./?app=1",
+  "display": "standalone",
+  "background_color": "#fdf2f3",
+  "theme_color": "#f6cfd2",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
