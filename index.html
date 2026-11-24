@@ -10,7 +10,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Hubbit">
-<meta name="theme-color" content="#f6cfd2">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#fdf5f2">
+<script>
+  // Opened from the home screen icon? Then this page becomes the app itself.
+  var APP = window.navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    /[?&]app=1/.test(location.search);
+  if (APP) document.documentElement.className = "app";
+</script>
 <style>
   :root { --bg: #fdf2f3; --card: #ffffff; --ink: #2b2024; --muted: #8a7479; --accent: #a4636b; --btn: #2b2024; }
   @media (prefers-color-scheme: dark) { :root { --bg: #1e1317; --card: #2b1c21; --ink: #f8e9eb; --muted: #c9a9ae; --accent: #f0b3bb; --btn: #f6c6cd; } }
@@ -28,6 +36,18 @@
   .how { margin-top: 22px; text-align: left; background: rgba(164,99,107,.08); border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.5; }
   .how b { color: var(--accent); }
   .how ol { margin: 6px 0 0; padding-left: 20px; }
+
+  /* App mode: the Hub fills the whole screen, same color as the Hub (no white bars) */
+  #shell { display: none; }
+  html.app, html.app body { height: 100%; overflow: hidden; background: #fdf5f2; }
+  html.app body { display: block; padding: 0; min-height: 0; }
+  html.app .card { display: none; }
+  html.app #shell { display: block; }
+  #splash { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #fdf5f2; }
+  #splash img { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 6px 18px rgba(194,127,134,.3); }
+  #hub { position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); bottom: 0;
+         width: 100%; height: calc(100% - env(safe-area-inset-top, 0px)); border: 0; background: transparent; opacity: 0; transition: opacity .25s; }
+  #hub.ready { opacity: 1; }
 </style>
 </head>
 <body>
@@ -45,15 +65,25 @@
       Then just tap the icon to open the Hub.
     </div>
   </div>
+  <div id="shell">
+    <div id="splash"><img src="apple-touch-icon.png" alt=""></div>
+  </div>
 <script>
   // The one place to change if the Hub's link ever changes:
   var HUB = "https://script.google.com/macros/s/AKfycbxIYHa3Jv_yjcF3n_l6PDLx0cX6LoP8wiAAKsEeiZ1u7iBF_k3STDOhMde9kBiJR8kR/exec";
   document.getElementById("open").href = HUB;
-  // Opened from the home screen icon: go straight to the Hub
-  var fromIcon = window.navigator.standalone === true ||
-    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-    /[?&]app=1/.test(location.search);
-  if (fromIcon) location.replace(HUB);
+  if (APP) {
+    // Show the Hub inside the app (instead of jumping out to a browser sheet)
+    var f = document.createElement("iframe");
+    f.id = "hub";
+    f.title = "Hubbit";
+    f.src = HUB;
+    f.setAttribute("allow", "clipboard-write");
+    f.onload = function() { f.className = "ready"; };
+    document.getElementById("shell").appendChild(f);
+    // If it can't load for some reason, fall back to opening the Hub directly
+    setTimeout(function() { if (f.className !== "ready") location.replace(HUB); }, 20000);
+  }
 </script>
 </body>
 </html>
